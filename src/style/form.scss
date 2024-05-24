@@ -1,0 +1,23 @@
+input[type="text"],[type="password"],[type="email"],[type="number"],[type="tel"], select, textarea {
+  @apply border text-base border-gray-300 py-2 px-3 w-full rounded-md h-10;
+  &:focus {
+      @apply outline-blue-400;
+  }
+}
+input[type="date"]{
+  max-height: 38px;
+  @apply border border-gray-300 rounded py-2 px-3 w-full;
+  &:focus {
+      @apply outline-blue-400;
+  }
+}
+input[type="checkbox"] {
+  @apply border border-gray-300  w-4 h-4 rounded-sm;
+}
+input[type="radio"] {
+  @apply border border-gray-300 w-4 h-4 rounded-sm;
+}
+
+label {
+  @apply font-medium  text-gray-600 text-sm;
+}

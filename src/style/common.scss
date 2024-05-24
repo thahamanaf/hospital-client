@@ -1,0 +1,54 @@
+*{
+    @apply text-gray-800
+}
+a {
+  transition: all ease .3s;
+}
+h2 {
+  @apply text-gray-800 font-semibold text-base;
+}
+
+.btn {
+  @apply bg-teal-600 text-white text-base font-medium inline-flex items-center justify-center text-center p-2 px-5 rounded-md hover:bg-teal-800 focus:outline-none h-10 cursor-pointer;
+  &--border {
+      @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-100;
+  }
+  &--full {
+      @apply w-full;
+  }
+  &--red {
+      @apply bg-red-500 hover:bg-red-600;
+  }
+  &--green {
+      @apply bg-green-500 hover:bg-green-600
+  }
+  &--black {
+      @apply bg-black text-white hover:bg-white hover:text-black
+  }
+}
+
+
+
+span.status {
+  @apply inline-block text-yellow-800 bg-yellow-100 font-medium text-xs px-5 py-1 rounded-lg;
+  &--red {
+      @apply text-red-800 bg-red-100;
+  }
+  &--green {
+      @apply text-green-800 bg-green-100;
+  }
+  &--gray {
+      @apply text-black bg-gray-100;
+  }
+  &--black {
+      @apply text-white bg-black;
+  }
+}
+
+.ant-select-single {
+    height: 40px;
+}
+
+.react-responsive-modal-modal {
+ padding: 0 !important;
+}
