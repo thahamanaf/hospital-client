@@ -3,21 +3,6 @@ import { Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import OptionDropdown from "../OptionDropdown";
 
-const items = [
-  {
-    // label: <Link to={`/`}>"Prescriptions"</Link>,
-    key: "0",
-  },
-  {
-    label: "2nd option",
-    key: "1",
-  },
-  {
-    label: "3rd menu item",
-    key: "3",
-  },
-];
-
 const dataSource = [
   {
     key: "1",
@@ -33,7 +18,7 @@ const dataSource = [
   },
 ];
 
-const PatientList = () => {
+const PatientList = ({ data }) => {
   const navigate = useNavigate();
 
   const columns = [
@@ -46,11 +31,27 @@ const PatientList = () => {
       title: "Age",
       dataIndex: "age",
       key: "age",
+      responsive: ["lg"],
+
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Place",
+      dataIndex: "place",
+      key: "place",
+      responsive: ["lg"],
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      responsive: ["lg"],
+
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+      responsive: ["lg"],
     },
     {
       title: "Options",
@@ -62,7 +63,7 @@ const PatientList = () => {
             {
               title: "History",
               icon: "",
-              action:() => navigate(`/dashboard/patients-history/${item.id}`),
+              action: () => navigate(`/dashboard/patients-history/${item.id}`),
             },
           ]}
         />
@@ -70,7 +71,7 @@ const PatientList = () => {
     },
   ];
 
-  return <Table dataSource={dataSource} columns={columns} />;
+  return <Table dataSource={data} columns={columns} />;
 };
 
 export default PatientList;

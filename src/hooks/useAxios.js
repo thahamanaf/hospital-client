@@ -6,9 +6,7 @@ import { useState, useEffect } from "react";
 const useAxios = () => {
   const user = useSelector((state) => state.auth.profile);
   const refreshToken = useRefreshToken();
-  const [accessToken, setToken] = useState(
-    user?.token || sessionStorage?.getItem("accessToken")
-  );
+  const [accessToken, setToken] = useState(user?.token);
   const getAccessToken = async () => {
     if (user?.token) {
       setToken(user?.token);

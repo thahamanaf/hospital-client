@@ -1,6 +1,8 @@
 import React from "react";
 import HospitalLogo from "../HospitalLogo";
-const PatientOPCard = () => {
+const PatientOPCard = ({ data }) => {
+  const patientName =
+    data?.patient_name || `${data?.first_name || ""} ${data?.last_name || ""}`;
   return (
     <div className="border rounded-md bg-white shadow-md max-w-[300px] py-2">
       <div className="flex items-center  gap-5 border-b px-2 pb-2">
@@ -19,11 +21,11 @@ const PatientOPCard = () => {
           <li>Mobile:</li>
         </ul>
         <ul>
-          <li>Sakeer</li>
-          <li>25</li>
-          <li>Kollam</li>
-          <li>Male</li>
-          <li>9898989898</li>
+          <li>{patientName}</li>
+          <li>{data?.age}</li>
+          <li>{data?.place}</li>
+          <li>{data?.gender}</li>
+          <li>{data?.phone}</li>
         </ul>
       </div>
     </div>

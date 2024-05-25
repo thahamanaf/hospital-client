@@ -1,20 +1,5 @@
 import React from "react";
-import { Table, Select } from "antd";
-
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
+import { Table, Tag } from "antd";
 
 const columns = [
   {
@@ -23,19 +8,50 @@ const columns = [
     key: "name",
   },
   {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    responsive: ["lg"],
   },
   {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
+    title: "Role",
+    dataIndex: "role",
+    key: "role",
+    render: (_, item) => {
+      return <Tag>{item.role}</Tag>;
+    },
+    responsive: ["md"],
+  },
+  {
+    title: "Account Status",
+    dataIndex: "accountStatus",
+    key: "accountStatus",
+    render: (_, item) => {
+      let status;
+      if (Number(item.accountStatus) === 1) {
+        status = {
+          title: "Active",
+          color: "green",
+        };
+      } else if (Number(item.accountStatus) === 2) {
+        status = {
+          title: "Pending",
+          color: "yellow",
+        };
+      } else {
+        status = {
+          title: "In Active",
+          color: "red",
+        };
+      }
+      return <Tag color={status.color}>{status.title}</Tag>;
+    },
+    responsive: ["lg"],
   },
 ];
 
-const StaffList = () => {
-  return <Table dataSource={dataSource} columns={columns} />;
+const StaffList = ({ data }) => {
+  return <Table dataSource={data} columns={columns} />;
 };
 
 export default StaffList;

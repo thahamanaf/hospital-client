@@ -8,13 +8,13 @@ import {
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 
-const OptionDropdown = ({ menuList }) => {
+const OptionDropdown = ({ menuList, menuBtn }) => {
   const menu = Array.isArray(menuList) ? menuList : [];
   return (
     <Menu as="div" className="relative inline-block text-left select-none">
       <div>
         <MenuButton className="inline-flex w-full justify-center py-2 text-sm  text-gray-700 hover:bg-gray-50">
-          <EllipsisVerticalIcon width={25} />
+          { menuBtn || <EllipsisVerticalIcon width={25} />}
         </MenuButton>
       </div>
 

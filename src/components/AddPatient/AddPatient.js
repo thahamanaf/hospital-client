@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-responsive-modal";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useForm, Controller } from "react-hook-form";
 import { Select } from "antd";
 import { getFormErrMsg } from "../../utils/utils";
 import { genderOptions } from "../../utils/commonSelectBoxOptions";
+import useAxios from "../../hooks/useAxios";
+import CustomErrorMessage from "../CustomErrorMessage";
+import { formatApiFormErrors } from "../../utils/utils";
+import { toast } from "react-toastify";
+import LoadingButton from "../LoadingButton";
 
 const formFields = {
   firstName: "first_name",
   lastName: "last_name",
   age: "age",
-  mobile: "mobile",
+  mobile: "phone",
   gender: "gender",
   place: "place",
 };
 
-const AddPatient = ({ open, close }) => {
+const AddPatient = ({ open, close, fetchPatientList }) => {
+  const axios = useAxios();
   const {
     register,
     handleSubmit,
@@ -23,7 +29,33 @@ const AddPatient = ({ open, close }) => {
     control,
   } = useForm({ mode: "onBlur" });
 
-  const onSubmit = () => {};
+  const [isBtnLoader, setIsBtnLoader] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+
+  const onSubmit = async (data) => {
+    setErrMsg("");
+    setIsBtnLoader(true);
+    const result = await axios
+      .post("patient/create-patient", data)
+      .then((res) => res)
+      .catch((err) => err)
+      .finally(() => {
+        setIsBtnLoader(false);
+      });
+    if (result?.data?.status) {
+      fetchPatientList && fetchPatientList();
+      toast.success(result?.data?.message);
+      close();
+    } else {
+      if (Array.isArray(result?.response?.data?.validationRes?.errors)) {
+        setErrMsg(
+          formatApiFormErrors(result?.response?.data?.validationRes?.errors)
+        );
+      } else {
+        setErrMsg(result?.response?.data?.message || "");
+      }
+    }
+  };
   return (
     <Modal
       open={open}
@@ -39,6 +71,7 @@ const AddPatient = ({ open, close }) => {
             <XCircleIcon width={20} fill="#db0000" />
           </button>
         </div>
+        <CustomErrorMessage>{errMsg}</CustomErrorMessage>
         <form
           className="flex flex-col gap-2 p-5"
           onSubmit={handleSubmit(onSubmit)}
@@ -96,7 +129,9 @@ const AddPatient = ({ open, close }) => {
                 rules={{
                   required: "Gender is required",
                 }}
-                render={({ field }) => <Select options={genderOptions} {...field} />}
+                render={({ field }) => (
+                  <Select options={genderOptions} {...field} />
+                )}
               />
               {getFormErrMsg(errors, formFields.gender)}
             </div>
@@ -112,8 +147,15 @@ const AddPatient = ({ open, close }) => {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <input type="submit" className="btn" value="Create Patient" />
-            <button onClick={close} className="btn btn--border">Close</button>
+            {isBtnLoader ? (
+              <LoadingButton>Creating...</LoadingButton>
+            ) : (
+              <input type="submit" className="btn" value="Create Patient" />
+            )}
+
+            <button onClick={close} className="btn btn--border">
+              Close
+            </button>
           </div>
         </form>
       </div>

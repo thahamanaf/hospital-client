@@ -15,13 +15,12 @@ const useRefreshToken = () => {
 
     if (response?.data?.status) {
       const { accessToken } = response.data;
-      sessionStorage?.setItem("accessToken", accessToken);
+
       const decodedData = jwtDecode(accessToken).data;
       dispatch(setUserProfile({ ...decodedData, token: accessToken }));
       return accessToken;
-    } else {
-      sessionStorage?.removeItem("accessToken");
     }
+    return false
   };
   return refreshToken;
 };

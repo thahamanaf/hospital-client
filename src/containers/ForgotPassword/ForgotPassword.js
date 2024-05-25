@@ -6,25 +6,21 @@ import LoadingButton from "../../components/LoadingButton";
 import { Link, useNavigate } from "react-router-dom";
 import { emailRegex } from "../../utils/regexValues";
 import axios from "../../helpers/axios";
-import { jwtDecode } from "jwt-decode";
 import CustomErrorMessage from "../../components/CustomErrorMessage";
 import { formatApiFormErrors } from "../../utils/utils";
-import { setUserProfile } from "../../redux/reducers/auth";
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const formFields = {
   email: "email",
-  password: "password",
 };
 
-const Login = () => {
+const ForgotPassword = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [isBtnLoader, setIsBtnLoader] = useState(false);
   const [errMsg, setErrMsg] = useState();
@@ -32,15 +28,13 @@ const Login = () => {
   const onSubmit = async (data) => {
     setIsBtnLoader(true);
     const result = await axios
-      .post("auth/login", data)
+      .post("auth/forgot-password", data)
       .then((res) => res)
       .catch((err) => err)
       .finally(() => setIsBtnLoader(false));
     if (result?.data?.status) {
-      const user = jwtDecode(result?.data?.accessToken)?.data;
-
-      dispatch(setUserProfile({ ...user, token: result?.data?.accessToken }));
-      navigate("/dashboard");
+      toast.success(result?.data?.message);
+      navigate("/");
     } else {
       if (Array.isArray(result?.response?.data?.validationRes?.errors)) {
         setErrMsg(
@@ -58,8 +52,10 @@ const Login = () => {
           <HospitalLogo className="w-28" />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <h1 className="text-xl font-semibold">Login</h1>
-          <label>Please login to your account using email and password</label>
+          <h1 className="text-xl font-semibold">Forgot Password</h1>
+          <label>
+            Don't worry we will send you instructions to reset your password
+          </label>
         </div>
         <CustomErrorMessage>{errMsg}</CustomErrorMessage>
         <form
@@ -82,24 +78,18 @@ const Login = () => {
             />
             {getFormErrMsg(errors, formFields.email)}
           </div>
-          <div className="flex flex-col gap-1">
-            <label>Password</label>
-            <input
-              {...register(formFields.password, {
-                required: "Password is required",
-              })}
-              type="password"
-              placeholder="••••••••"
-            />
-            {getFormErrMsg(errors, formFields.password)}
-          </div>
+
           {isBtnLoader ? (
-            <LoadingButton>Logging In...</LoadingButton>
+            <LoadingButton>Sending...</LoadingButton>
           ) : (
-            <input className="btn" type="submit" value="Log In" />
+            <input
+              className="btn"
+              type="submit"
+              value="Send password reset link"
+            />
           )}
-          <Link to="forgot-password" className="btn btn--border">
-            Forgot Password
+          <Link to="/" className="btn btn--border">
+            Back to login
           </Link>
         </form>
       </div>
@@ -107,4 +97,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

@@ -9,6 +9,9 @@ import { userRoleOptions } from "../../utils/commonSelectBoxOptions";
 import { emailRegex } from "../../utils/regexValues";
 import LoadingButton from "../LoadingButton";
 import useAxios from "../../hooks/useAxios";
+import CustomErrorMessage from "../CustomErrorMessage";
+import { formatApiFormErrors } from "../../utils/utils";
+import { toast } from "react-toastify";
 
 const formFields = {
   firstName: "first_name",
@@ -17,7 +20,7 @@ const formFields = {
   role: "role_id",
 };
 
-const AddStaff = ({ open, close }) => {
+const AddStaff = ({ open, close, fetchStaffList }) => {
   const axios = useAxios();
   const {
     register,
@@ -27,12 +30,31 @@ const AddStaff = ({ open, close }) => {
   } = useForm({ mode: "onBlur" });
 
   const [isBtnLoader, setIsBtnLoader] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const onSubmit = async (data) => {
-    const result = axios
+    setErrMsg("");
+    setIsBtnLoader(true);
+    const result = await axios
       .post("auth/register", data)
       .then((res) => res)
-      .catch((err) => err);
+      .catch((err) => err)
+      .finally(() => {
+        setIsBtnLoader(false);
+      });
+    if (result?.data?.status) {
+      fetchStaffList();
+      toast.success(result?.data?.message);
+      close();
+    } else {
+      if (Array.isArray(result?.response?.data?.validationRes?.errors)) {
+        setErrMsg(
+          formatApiFormErrors(result?.response?.data?.validationRes?.errors)
+        );
+      } else {
+        setErrMsg(result?.response?.data?.message || "Failed to login");
+      }
+    }
   };
 
   return (
@@ -49,6 +71,9 @@ const AddStaff = ({ open, close }) => {
           <button onClick={close}>
             <XCircleIcon width={20} fill="#db0000" />
           </button>
+        </div>
+        <div className="px-3">
+          <CustomErrorMessage>{errMsg}</CustomErrorMessage>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-3">
           <div className="sm:flex gap-5">
